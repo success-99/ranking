@@ -4,6 +4,7 @@ from rest_framework.exceptions import ValidationError
 
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
@@ -28,6 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class StudentUserSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    total_marks = serializers.IntegerField(default=0)
 
     class Meta:
         model = StudentUser
@@ -103,9 +105,9 @@ class LoginSerializer(serializers.Serializer):
         if username and password:
             user = authenticate(request=self.context.get('request'), username=username, password=password)
             if user is None:
-                raise serializers.ValidationError(_("Unable to log in with provided credentials."), code='authorization')
+                raise serializers.ValidationError(_("Taqdim etilgan hisob ma’lumotlari bilan tizimga kirib bo‘lmadi."), code='authorization')
         else:
-            raise serializers.ValidationError(_("Must include 'username' and 'password'."), code='authorization')
+            raise serializers.ValidationError(_("Username va passwordni to'g'ri kiriting."), code='authorization')
 
         data['user'] = user
         return data

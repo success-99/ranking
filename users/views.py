@@ -32,6 +32,17 @@ class LoginView(APIView):
         login(request, user)
         return Response({'detail': 'Successfully logged in.'}, status=status.HTTP_200_OK)
 
+
+# class LoginView(APIView):
+#     serializer_class = LoginSerializer
+#
+#     def post(self, request, *args, **kwargs):
+#         serializer = self.serializer_class(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         user = serializer.validated_data['user']
+#         token, created = Token.objects.get_or_create(user=user)
+#         return Response({'token': token.key}, status=status.HTTP_200_OK)
+
 #
 # class AdminRegisterApiView(viewsets.GenericViewSet):
 #     queryset = CustomUser.objects.all()

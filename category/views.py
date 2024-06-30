@@ -30,7 +30,7 @@ class TotalDocTeacherViewSet(mixins.UpdateModelMixin,
 
     def get_permissions(self):
         if self.request.method in ['PATCH']:
-            return [IsTeacher()]
+            return [IsAuthenticated()]
         else:
             return super().get_permissions()
 
@@ -43,7 +43,7 @@ class CategoryOneTeacherModelViewSet(mixins.UpdateModelMixin,
 
     def get_permissions(self):
         if self.request.method in ['PATCH']:
-            return [IsTeacher()]
+            return [IsAuthenticated()]
         else:
             return super().get_permissions()
 
@@ -58,7 +58,7 @@ class CategoryOneStudentModelViewSet(mixins.UpdateModelMixin,
 
     def get_permissions(self):
         if self.request.method in ['PATCH']:
-            return [IsStudent()]
+            return [IsAuthenticated()]
         else:
             return super().get_permissions()
 
