@@ -13,15 +13,14 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
 
 
-
 class StudentUserRegisterView(generics.CreateAPIView):
     queryset = StudentUser.objects.all()
     serializer_class = StudentUserSerializer
 
+
 class TeacherUserRegisterView(generics.CreateAPIView):
     queryset = TeacherUser.objects.all()
     serializer_class = TeacherUserSerializer
-
 
 
 class LoginView(APIView):
@@ -30,8 +29,7 @@ class LoginView(APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         login(request, user)
-        return Response({'detail': 'Successfully logged in.'}, status=status.HTTP_200_OK)
-
+        return Response({'detail': 'Siz tizimga kirdingiz.'}, status=status.HTTP_200_OK)
 
 # class LoginView(APIView):
 #     serializer_class = LoginSerializer

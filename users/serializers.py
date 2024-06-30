@@ -29,11 +29,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 class StudentUserSerializer(serializers.ModelSerializer):
     user = UserSerializer()
-    total_marks = serializers.IntegerField(default=0)
 
     class Meta:
         model = StudentUser
-        fields = ['user', 'group', 'birth_date', 'total_marks']
+        fields = ['user', 'group']
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')
