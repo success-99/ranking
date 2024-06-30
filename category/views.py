@@ -1,11 +1,11 @@
 from django.db import transaction
-from rest_framework import status, parsers, mixins
+from rest_framework import status, parsers, mixins, generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from .serializers import TotalDocModelSerializers, CategoryOneModelSerializers, TotalDocTeacherModelSerializers, \
     CategoryOneTeacherModelSerializers, CategoryOneStudentModelSerializers, \
     SubCategoryTwoFileStudentModelSerializers, CategoryTwoModelSerializers, SubCategoryTwoModelSerializers, \
-    SubCategoryTwoFileModelSerializers
+    SubCategoryTwoFileModelSerializers, CombinedTitleSerializer
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.pagination import LimitOffsetPagination
 from drf_yasg.utils import swagger_auto_schema
@@ -108,6 +108,42 @@ class SubCategoryTwoFileModelViewSet(mixins.RetrieveModelMixin,
     permission_classes = (AllowAny,)
     queryset = SubCategoryTwoFile.objects.all()
     serializer_class = SubCategoryTwoFileModelSerializers
+
+
+
+
+
+
+
+
+class CombinedTitleListAPIView(generics.ListAPIView):
+    serializer_class = CombinedTitleSerializer
+
+    def get_queryset(self):
+        # Fetch data from both models and combine them
+        category_one_titles = CategoryOne.objects.all().values('title')
+        category_two_titles = CategoryTwo.objects.all().values('title')
+
+        # Add a source identifier to each title
+        combined_titles = [{'title': item['title'], 'source': 'CategoryOne'} for item in category_one_titles]
+        combined_titles += [{'title': item['title'], 'source': 'CategoryTwo'} for item in category_two_titles]
+
+        return combined_titles
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+
+
+
+
+
+
+
+
 
 #     # lookup_field = 'category'
 #

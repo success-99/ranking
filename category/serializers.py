@@ -82,6 +82,25 @@ class SubCategoryTwoFileStudentModelSerializers(serializers.ModelSerializer):
             raise serializers.ValidationError("Fayl .pdf, .jpg, .png .jpeg turidan birida bo'lishi kerak")
         return value
 
+
+
+
+
+
+
+
+
+class CombinedTitleSerializer(serializers.Serializer):
+    title = serializers.CharField(max_length=255)
+    source = serializers.CharField(max_length=50)
+
+
+
+
+
+
+
+
 #         # depth = 1
 #
 #

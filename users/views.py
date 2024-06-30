@@ -5,7 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from users.models import StudentUser, TeacherUser
-from .serializers import StudentUserSerializer, TeacherUserSerializer, LoginSerializer
+from .serializers import StudentUserSerializer, TeacherUserSerializer, LoginSerializer, StudentUserListSerializer, \
+    TeacherUserListSerializer, StudentSerializer
 from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
 from rest_framework import status
@@ -18,9 +19,24 @@ class StudentUserRegisterView(generics.CreateAPIView):
     serializer_class = StudentUserSerializer
 
 
+class StudentUserListRegisterView(generics.ListAPIView):
+    queryset = StudentUser.objects.all()
+    serializer_class = StudentUserListSerializer
+
+
+class StudentUserRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = StudentUser.objects.all()
+    serializer_class = StudentSerializer
+
+
 class TeacherUserRegisterView(generics.CreateAPIView):
     queryset = TeacherUser.objects.all()
     serializer_class = TeacherUserSerializer
+
+
+class TeacherUserListRegisterView(generics.ListAPIView):
+    queryset = TeacherUser.objects.all()
+    serializer_class = TeacherUserListSerializer
 
 
 class LoginView(APIView):

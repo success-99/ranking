@@ -27,6 +27,25 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class StudentUserListSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username')
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name')
+    email = serializers.CharField(source='user.email')
+
+    class Meta:
+        model = StudentUser
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'group']
+
+
+class StudentSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = StudentUser
+        fields = '__all__'
+
+
 class StudentUserSerializer(serializers.ModelSerializer):
     user = UserSerializer()
 
@@ -57,6 +76,18 @@ class TeacherUserSerializer(serializers.ModelSerializer):
             user = user_serializer.save()
         teacher_user = TeacherUser.objects.create(user=user, **validated_data)
         return teacher_user
+
+
+class TeacherUserListSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username')
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name')
+    email = serializers.CharField(source='user.email')
+
+    class Meta:
+        model = TeacherUser
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'position']
+
 
 # class RegisterSerializer(serializers.ModelSerializer):
 #     password = serializers.CharField(write_only=True, required=True)
@@ -104,12 +135,38 @@ class LoginSerializer(serializers.Serializer):
         if username and password:
             user = authenticate(request=self.context.get('request'), username=username, password=password)
             if user is None:
-                raise serializers.ValidationError(_("Taqdim etilgan hisob ma’lumotlari bilan tizimga kirib bo‘lmadi."), code='authorization')
+                raise serializers.ValidationError(_("Taqdim etilgan hisob ma’lumotlari bilan tizimga kirib bo‘lmadi."),
+                                                  code='authorization')
         else:
             raise serializers.ValidationError(_("Username va passwordni to'g'ri kiriting."), code='authorization')
 
         data['user'] = user
         return data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # class LoginStudentSerializer(serializers.Serializer):

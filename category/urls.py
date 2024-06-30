@@ -5,25 +5,28 @@ from rest_framework_simplejwt.views import TokenBlacklistView, TokenRefreshView,
 from .views import TotalDocViewSet, CategoryOneModelViewSet,\
     TotalDocTeacherViewSet, CategoryOneTeacherModelViewSet,\
     CategoryOneStudentModelViewSet, SubCategoryTwoFileStudentModelViewSet,\
-    CategoryTwoModelViewSet, SubCategoryTwoModelViewSet, SubCategoryTwoFileModelViewSet
+    CategoryTwoModelViewSet, SubCategoryTwoModelViewSet, SubCategoryTwoFileModelViewSet, CombinedTitleListAPIView
 
 router = DefaultRouter()
 
 
-router.register('total-doc', TotalDocViewSet, basename='total-doc')
-router.register('category-one', CategoryOneModelViewSet, basename='category-one')
-router.register('category-two', CategoryTwoModelViewSet, basename='category-two')
-router.register('subcategory-two', SubCategoryTwoModelViewSet, basename='subcategory-two')
-router.register('subcategory-two-file', SubCategoryTwoFileModelViewSet, basename='subcategory-two-file')
+router.register('total-doc', TotalDocViewSet, basename='total_doc')
+router.register('category-one', CategoryOneModelViewSet, basename='category_one')
+router.register('category-two', CategoryTwoModelViewSet, basename='category_two')
+router.register('subcategory-two', SubCategoryTwoModelViewSet, basename='subcategory_two')
+router.register('subcategory-two-file', SubCategoryTwoFileModelViewSet, basename='subcategory_two_file')
 
-router.register('total-doc-teacher', TotalDocTeacherViewSet, basename='total-doc-teacher')
-router.register('category-one-teacher', CategoryOneTeacherModelViewSet, basename='category-one-teacher')
 
-router.register('category-one-student', CategoryOneStudentModelViewSet, basename='category-one-student')
-router.register('subcategory-two-file-student', SubCategoryTwoFileStudentModelViewSet, basename='subcategory-two-file-student')
+router.register('total-doc-teacher', TotalDocTeacherViewSet, basename='total_doc_teacher')
+router.register('category-one-teacher', CategoryOneTeacherModelViewSet, basename='category_one_teacher')
+
+router.register('category-one-student', CategoryOneStudentModelViewSet, basename='category_one_student')
+router.register('subcategory-two-file-student', SubCategoryTwoFileStudentModelViewSet, basename='subcategory_two_file'
+                                                                                                '_student')
 urlpatterns = [
 
     path('', include(router.urls)),
+    path('all-category-title/', CombinedTitleListAPIView.as_view(), name='all_category_title'),
 
     #     path('user-list/', UsersListApiView.as_view(), name='list'),
     #     path('user-detail/<int:pk>/', UserDetailApiView.as_view(), name='user-detail'),
