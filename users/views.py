@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
+from rest_framework.authtoken.models import Token
 
 
 class StudentUserRegisterView(generics.CreateAPIView):
@@ -39,23 +40,23 @@ class TeacherUserListRegisterView(generics.ListAPIView):
     serializer_class = TeacherUserListSerializer
 
 
-class LoginView(APIView):
-    def post(self, request, *args, **kwargs):
-        serializer = LoginSerializer(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        login(request, user)
-        return Response({'detail': 'Siz tizimga kirdingiz.'}, status=status.HTTP_200_OK)
-
 # class LoginView(APIView):
-#     serializer_class = LoginSerializer
-#
 #     def post(self, request, *args, **kwargs):
-#         serializer = self.serializer_class(data=request.data)
+#         serializer = LoginSerializer(data=request.data, context={'request': request})
 #         serializer.is_valid(raise_exception=True)
 #         user = serializer.validated_data['user']
-#         token, created = Token.objects.get_or_create(user=user)
-#         return Response({'token': token.key}, status=status.HTTP_200_OK)
+#         login(request, user)
+#         return Response({'detail': 'Siz tizimga kirdingiz.'}, status=status.HTTP_200_OK)
+
+class LoginView(APIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key}, status=status.HTTP_200_OK)
 
 #
 # class AdminRegisterApiView(viewsets.GenericViewSet):

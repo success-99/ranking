@@ -4,13 +4,13 @@ from django.urls import path, include
 
 from .views import StudentUserRegisterView, TeacherUserRegisterView, LoginView,\
     StudentUserListRegisterView, TeacherUserListRegisterView, StudentUserRetrieveUpdateDestroy
-#
+
 # router = DefaultRouter()
 #
 #
 # router.register('register-admin', AdminRegisterApiView, basename='register-admin')
 # router.register('register-student', StudentRegisterApiView, basename='register-student')
-#
+
 urlpatterns = [
     path('student-register/', StudentUserRegisterView.as_view(), name='student_register'),
     path('student-list/', StudentUserListRegisterView.as_view(), name='student_list'),

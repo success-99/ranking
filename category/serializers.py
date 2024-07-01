@@ -1,33 +1,42 @@
 from rest_framework import serializers
-from .models import TotalDoc, CategoryOne, SubCategoryTwoFile, CategoryTwo, SubCategoryTwo
+from .models import TotalDoc, CategoryOne, SubCategoryTwoFile, CategoryTwo, SubCategoryTwo, SubCategoryTwoUser, \
+    CategoryOneUser, TotalDocUser
 import os
 
 
-class TotalDocModelSerializers(serializers.ModelSerializer):
+# TotalDoc model serializers
+class TotalDocListModelSerializers(serializers.ModelSerializer):
     class Meta:
         model = TotalDoc
-        fields = ['id', 'title', 'mark']
+        fields = ['id', 'title']
 
 
-class TotalDocTeacherModelSerializers(serializers.ModelSerializer):
+# TotalDocUser model serializers
+class TotalDocUserListModelSerializers(serializers.ModelSerializer):
+    student = serializers.CharField(source='student.user.get_full_name')
+    title = serializers.CharField(source='title.title')
+
     class Meta:
-        model = TotalDoc
-        fields = ['mark']
-        extra_kwargs = {
-            'title': {'required': False}
-        }
+        model = TotalDocUser
+        fields = ['id', 'student', 'title', 'mark']
 
 
-class CategoryOneModelSerializers(serializers.ModelSerializer):
+class TotalDocUserTeacherMarkModelSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = TotalDocUser
+        fields = ['id', 'mark']
+
+
+class CategoryOneListModelSerializers(serializers.ModelSerializer):
     class Meta:
         model = CategoryOne
-        fields = ['id', 'title', 'file', 'mark']
+        fields = ['id', 'title']
 
 
 class CategoryTwoModelSerializers(serializers.ModelSerializer):
     class Meta:
         model = CategoryTwo
-        fields = ['id', 'title', 'marks']
+        fields = ['id', 'title']
 
 
 class SubCategoryTwoModelSerializers(serializers.ModelSerializer):
@@ -35,7 +44,7 @@ class SubCategoryTwoModelSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = SubCategoryTwo
-        fields = ['id', 'title', 'sub_title', 'mark']
+        fields = ['id', 'title', 'sub_title']
 
 
 class SubCategoryTwoFileModelSerializers(serializers.ModelSerializer):
@@ -47,9 +56,9 @@ class SubCategoryTwoFileModelSerializers(serializers.ModelSerializer):
         fields = ['id', 'title', 'student', 'file', 'is_approved']
 
 
-class CategoryOneTeacherModelSerializers(serializers.ModelSerializer):
+class CategoryOneTeacherStudentMarkModelSerializers(serializers.ModelSerializer):
     class Meta:
-        model = CategoryOne
+        model = CategoryOneUser
         fields = ['mark']
 
 
@@ -73,7 +82,11 @@ class SubCategoryTwoFileStudentModelSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = SubCategoryTwoFile
-        fields = ['file']
+        fields = ['title', 'file', 'student']
+        extra_kwargs = {
+            'is_approved': {'required': False}
+
+        }
 
     def validate_file(self, value):
         valid_extensions = ['.pdf', '.jpg', '.png', '.jpeg']
@@ -83,23 +96,9 @@ class SubCategoryTwoFileStudentModelSerializers(serializers.ModelSerializer):
         return value
 
 
-
-
-
-
-
-
-
 class CombinedTitleSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=255)
     source = serializers.CharField(max_length=50)
-
-
-
-
-
-
-
 
 #         # depth = 1
 #

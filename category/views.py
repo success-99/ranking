@@ -2,148 +2,148 @@ from django.db import transaction
 from rest_framework import status, parsers, mixins, generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from .serializers import TotalDocModelSerializers, CategoryOneModelSerializers, TotalDocTeacherModelSerializers, \
-    CategoryOneTeacherModelSerializers, CategoryOneStudentModelSerializers, \
-    SubCategoryTwoFileStudentModelSerializers, CategoryTwoModelSerializers, SubCategoryTwoModelSerializers, \
-    SubCategoryTwoFileModelSerializers, CombinedTitleSerializer
+from .serializers import TotalDocListModelSerializers, TotalDocUserTeacherMarkModelSerializers, \
+    TotalDocUserListModelSerializers, CategoryOneListModelSerializers
+
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.pagination import LimitOffsetPagination
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
-from .models import TotalDoc, CategoryOne, SubCategoryTwoFile, CategoryTwo, SubCategoryTwo
+from .models import TotalDoc, CategoryOne, SubCategoryTwoFile, CategoryTwo, SubCategoryTwo, TotalDocUser
 from users.permissions import IsStudent, IsTeacher, IsSuperAdmin
 
 
-class TotalDocViewSet(mixins.RetrieveModelMixin,
-                      mixins.ListModelMixin,
-                      GenericViewSet):
+# TotalDoc model views
+class TotalDocRetrieveListModelMixinView(mixins.RetrieveModelMixin,
+                                         mixins.ListModelMixin,
+                                         GenericViewSet):
     permission_classes = (AllowAny,)
     queryset = TotalDoc.objects.all()
-    serializer_class = TotalDocModelSerializers
+    serializer_class = TotalDocListModelSerializers
 
 
-class TotalDocTeacherViewSet(mixins.UpdateModelMixin,
-                             GenericViewSet):
-    queryset = TotalDoc.objects.all()
-    serializer_class = TotalDocTeacherModelSerializers
+# TotalDocUser model views
+class TotalDocUserRetrieveListModelMixinView(mixins.RetrieveModelMixin,
+                                             mixins.ListModelMixin,
+                                             GenericViewSet):
+    permission_classes = (AllowAny,)
+    queryset = TotalDocUser.objects.all()
+    serializer_class = TotalDocUserListModelSerializers
+
+
+class TotalDocTeacherMarkUpdateModelMixinView(mixins.UpdateModelMixin,
+                                              GenericViewSet):
+    queryset = TotalDocUser.objects.all()
+    serializer_class = TotalDocUserTeacherMarkModelSerializers
     http_method_names = ['patch']
 
     def get_permissions(self):
         if self.request.method in ['PATCH']:
-            return [IsAuthenticated()]
+            return [IsTeacher()]
         else:
             return super().get_permissions()
 
 
-class CategoryOneTeacherModelViewSet(mixins.UpdateModelMixin,
-                                     GenericViewSet):
-    queryset = CategoryOne.objects.all()
-    serializer_class = CategoryOneTeacherModelSerializers
-    http_method_names = ['patch']
-
-    def get_permissions(self):
-        if self.request.method in ['PATCH']:
-            return [IsAuthenticated()]
-        else:
-            return super().get_permissions()
-
-
-class CategoryOneStudentModelViewSet(mixins.UpdateModelMixin,
-                                     GenericViewSet):
-    queryset = CategoryOne.objects.all()
-    serializer_class = CategoryOneStudentModelSerializers
-    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
-
-    http_method_names = ['patch']
-
-    def get_permissions(self):
-        if self.request.method in ['PATCH']:
-            return [IsAuthenticated()]
-        else:
-            return super().get_permissions()
-
-
-class SubCategoryTwoFileStudentModelViewSet(mixins.UpdateModelMixin,
+# CategoryOne model views
+class CategoryOneRetrieveListModelMixinView(mixins.RetrieveModelMixin,
+                                            mixins.ListModelMixin,
                                             GenericViewSet):
-    queryset = SubCategoryTwoFile.objects.all()
-    serializer_class = SubCategoryTwoFileStudentModelSerializers
-    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
-
-    http_method_names = ['patch']
-
-    def get_permissions(self):
-        if self.request.method in ['PATCH']:
-            return [IsStudent()]
-        else:
-            return super().get_permissions()
-
-
-class CategoryOneModelViewSet(mixins.RetrieveModelMixin,
-                              mixins.ListModelMixin,
-                              GenericViewSet):
     permission_classes = (AllowAny,)
     queryset = CategoryOne.objects.all()
-    serializer_class = CategoryOneModelSerializers
+    serializer_class = CategoryOneListModelSerializers
 
+#
+# class CategoryOneTeacherModelViewSet(mixins.UpdateModelMixin,
+#                                      GenericViewSet):
+#     queryset = CategoryOne.objects.all()
+#     serializer_class = CategoryOneTeacherStudentMarkModelSerializers
+#     http_method_names = ['patch']
+#
+#     def get_permissions(self):
+#         if self.request.method in ['PATCH']:
+#             return [IsAuthenticated()]
+#         else:
+#             return super().get_permissions()
 
-class CategoryTwoModelViewSet(mixins.RetrieveModelMixin,
-                              mixins.ListModelMixin,
-                              GenericViewSet):
-    permission_classes = (AllowAny,)
-    queryset = CategoryTwo.objects.all()
-    serializer_class = CategoryTwoModelSerializers
-
-
-class SubCategoryTwoModelViewSet(mixins.RetrieveModelMixin,
-                                 mixins.ListModelMixin,
-                                 GenericViewSet):
-    permission_classes = (AllowAny,)
-    queryset = SubCategoryTwo.objects.all()
-    serializer_class = SubCategoryTwoModelSerializers
-
-
-class SubCategoryTwoFileModelViewSet(mixins.RetrieveModelMixin,
-                                     mixins.ListModelMixin,
-                                     GenericViewSet):
-    permission_classes = (AllowAny,)
-    queryset = SubCategoryTwoFile.objects.all()
-    serializer_class = SubCategoryTwoFileModelSerializers
-
-
-
-
-
-
-
-
-class CombinedTitleListAPIView(generics.ListAPIView):
-    serializer_class = CombinedTitleSerializer
-
-    def get_queryset(self):
-        # Fetch data from both models and combine them
-        category_one_titles = CategoryOne.objects.all().values('title')
-        category_two_titles = CategoryTwo.objects.all().values('title')
-
-        # Add a source identifier to each title
-        combined_titles = [{'title': item['title'], 'source': 'CategoryOne'} for item in category_one_titles]
-        combined_titles += [{'title': item['title'], 'source': 'CategoryTwo'} for item in category_two_titles]
-
-        return combined_titles
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-
-
-
-
-
-
-
-
-
+#
+# class CategoryOneStudentModelViewSet(mixins.UpdateModelMixin,
+#                                      GenericViewSet):
+#     queryset = CategoryOne.objects.all()
+#     serializer_class = CategoryOneStudentModelSerializers
+#     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
+#
+#     http_method_names = ['patch']
+#
+#     def get_permissions(self):
+#         if self.request.method in ['PATCH']:
+#             return [IsAuthenticated()]
+#         else:
+#             return super().get_permissions()
+#
+#
+# class SubCategoryTwoFileStudentModelViewSet(mixins.CreateModelMixin,
+#                                             GenericViewSet):
+#     queryset = SubCategoryTwoFile.objects.all()
+#     serializer_class = SubCategoryTwoFileStudentModelSerializers
+#     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
+#
+#     http_method_names = ['post']
+#
+#     def get_permissions(self):
+#         if self.request.method in ['POST']:
+#             return [IsStudent()]
+#         else:
+#             return super().get_permissions()
+#
+#
+# class CategoryOneModelViewSet(mixins.RetrieveModelMixin,
+#                               mixins.ListModelMixin,
+#                               GenericViewSet):
+#     permission_classes = (AllowAny,)
+#     queryset = CategoryOne.objects.all()
+#     serializer_class = CategoryOneModelSerializers
+#
+#
+# class CategoryTwoModelViewSet(mixins.RetrieveModelMixin,
+#                               mixins.ListModelMixin,
+#                               GenericViewSet):
+#     permission_classes = (AllowAny,)
+#     queryset = CategoryTwo.objects.all()
+#     serializer_class = CategoryTwoModelSerializers
+#
+#
+# class SubCategoryTwoModelViewSet(mixins.RetrieveModelMixin,
+#                                  mixins.ListModelMixin,
+#                                  GenericViewSet):
+#     permission_classes = (AllowAny,)
+#     queryset = SubCategoryTwo.objects.all()
+#     serializer_class = SubCategoryTwoModelSerializers
+#
+#
+# class SubCategoryTwoFileModelViewSet(mixins.RetrieveModelMixin,
+#                                      mixins.ListModelMixin,
+#                                      GenericViewSet):
+#     permission_classes = (AllowAny,)
+#     queryset = SubCategoryTwoFile.objects.all()
+#     serializer_class = SubCategoryTwoFileModelSerializers
+#
+#
+# class CombinedTitleListAPIView(generics.ListAPIView):
+#     serializer_class = CombinedTitleSerializer
+#
+#     def get_queryset(self):
+#         category_one_titles = CategoryOne.objects.all().values('title')
+#         category_two_titles = CategoryTwo.objects.all().values('title')
+#
+#         combined_titles = [{'title': item['title'], 'source': 'CategoryOne'} for item in category_one_titles]
+#         combined_titles += [{'title': item['title'], 'source': 'CategoryTwo'} for item in category_two_titles]
+#
+#         return combined_titles
+#
+#     def list(self, request, *args, **kwargs):
+#         queryset = self.get_queryset()
+#         serializer = self.get_serializer(queryset, many=True)
+#         return Response(serializer.data)
 
 #     # lookup_field = 'category'
 #
