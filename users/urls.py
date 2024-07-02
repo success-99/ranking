@@ -3,7 +3,7 @@ from django.urls import path, include
 # from rest_framework_simplejwt.views import TokenBlacklistView, TokenRefreshView, TokenObtainPairView
 
 from .views import StudentUserRegisterView, TeacherUserRegisterView, LoginView,\
-    StudentUserListRegisterView, TeacherUserListRegisterView, StudentUserRetrieveUpdateDestroy
+    StudentUserListRegisterView, TeacherUserListRegisterView, StudentUserRetrieveUpdateDestroy, TeacherUserRetrieveUpdateDestroy
 
 # router = DefaultRouter()
 #
@@ -18,6 +18,7 @@ urlpatterns = [
 
     path('teacher-register/', TeacherUserRegisterView.as_view(), name='teacher_register'),
     path('teacher-list/', TeacherUserListRegisterView.as_view(), name='teacher_list'),
+    path('teacher-detail/<int:pk>/', TeacherUserRetrieveUpdateDestroy.as_view(), name='teacher_detail'),
 
     path('user-login/', LoginView.as_view(), name='user_login'),
 

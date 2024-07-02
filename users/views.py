@@ -28,6 +28,13 @@ class StudentUserListRegisterView(generics.ListAPIView):
 class StudentUserRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = StudentUser.objects.all()
     serializer_class = StudentSerializer
+    http_method_names = ['get', 'patch', 'delete']
+
+
+class TeacherUserRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TeacherUser.objects.all()
+    serializer_class = TeacherUserSerializer
+    http_method_names = ['get', 'patch', 'delete']
 
 
 class TeacherUserRegisterView(generics.CreateAPIView):
