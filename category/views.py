@@ -5,14 +5,14 @@ from rest_framework.response import Response
 from .serializers import TotalDocListModelSerializers, TotalDocUserTeacherMarkModelSerializers, \
     TotalDocUserListModelSerializers, CategoryOneListModelSerializers, CategoryOneUserListModelSerializers, \
     CategoryOneStudentFileCreateModelSerializers, CategoryOneTeacherMarkCreateModelSerializers, CombinedTitleSerializer,\
-    CategoryTwoListModelSerializers, CategoryTwoUserListModelSerializers, SubCategoryTwoListModelSerializers
+    CategoryTwoListModelSerializers, CategoryTwoUserListModelSerializers, SubCategoryTwoListModelSerializers, SubCategoryTwoStudentListModelSerializers
 
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.pagination import LimitOffsetPagination
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 from .models import TotalDoc, CategoryOne, SubCategoryTwoFile, CategoryTwo, SubCategoryTwo, TotalDocUser, \
-    CategoryOneUser, CategoryTwoUser
+    CategoryOneUser, CategoryTwoUser, SubCategoryTwoUser
 from users.permissions import IsStudent, IsTeacher, IsSuperAdmin
 
 
@@ -122,7 +122,12 @@ class SubCategoryTwoRetrieveListModelMixinView(mixins.RetrieveModelMixin,
     serializer_class = SubCategoryTwoListModelSerializers
 
 
-
+class SubCategoryTwoStudentRetrieveListModelMixinView(mixins.RetrieveModelMixin,
+                                                mixins.ListModelMixin,
+                                                GenericViewSet):
+    permission_classes = (AllowAny,)
+    queryset = SubCategoryTwoUser.objects.all()
+    serializer_class = SubCategoryTwoStudentListModelSerializers
 
 
 

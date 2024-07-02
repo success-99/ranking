@@ -6,7 +6,7 @@ from .views import TotalDocRetrieveListModelMixinView, TotalDocUserRetrieveListM
     TotalDocTeacherMarkUpdateModelMixinView, CategoryOneRetrieveListModelMixinView, \
     CategoryOneUserRetrieveListModelMixinView, CategoryOneStudentFileUpdateModelMixinView,\
     CategoryOneTeacherUpdateMarkModelMixinView, CombinedTitleListAPIView, CategoryTwoRetrieveListModelMixinView,\
-    CategoryTwoUserRetrieveListModelMixinView, SubCategoryTwoRetrieveListModelMixinView
+    CategoryTwoUserRetrieveListModelMixinView, SubCategoryTwoRetrieveListModelMixinView, SubCategoryTwoStudentRetrieveListModelMixinView
 
 
 router = DefaultRouter()
@@ -25,6 +25,8 @@ router.register('category-two-list', CategoryTwoRetrieveListModelMixinView, base
 router.register('category-two-student-list', CategoryTwoUserRetrieveListModelMixinView, basename='category_one_student_list')
 
 router.register('subcategory-two-list', SubCategoryTwoRetrieveListModelMixinView, basename='subcategory_two_list')
+
+router.register('subcategory-two-student-list', SubCategoryTwoStudentRetrieveListModelMixinView, basename='subcategory_two_student_list')
 
 
 

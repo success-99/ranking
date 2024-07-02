@@ -85,6 +85,15 @@ class SubCategoryTwoListModelSerializers(serializers.ModelSerializer):
         fields = ['id', 'title', 'sub_title']
 
 
+# SubCategoryTwoUser model serializers
+class SubCategoryTwoStudentListModelSerializers(serializers.ModelSerializer):
+    student = serializers.CharField(source='student.user.get_full_name')
+    sub_title = serializers.CharField(source='sub_title.sub_title')
+
+    class Meta:
+        model = SubCategoryTwoUser
+        fields = ['id', 'student', 'sub_title', 'mark']
+
 
 
 

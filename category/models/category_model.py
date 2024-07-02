@@ -40,7 +40,7 @@ class CategoryOne(BaseModel):
 
 class CategoryOneUser(BaseModel):
     student = models.ForeignKey(StudentUser, related_name="category_one_student_users", on_delete=models.CASCADE,
-                                   null=True, blank=True)
+                                null=True, blank=True)
     title = models.ForeignKey(
         CategoryOne,
         on_delete=models.CASCADE,
@@ -71,8 +71,8 @@ class CategoryTwo(BaseModel):
 
 class CategoryTwoUser(BaseModel):
     student = models.ForeignKey(StudentUser, related_name="category_two_student_users", on_delete=models.CASCADE,
-                                   null=True,
-                                   blank=True)
+                                null=True,
+                                blank=True)
     title = models.ForeignKey(
         CategoryTwo,
         on_delete=models.CASCADE,
@@ -101,9 +101,9 @@ class SubCategoryTwo(BaseModel):
 
 class SubCategoryTwoUser(BaseModel):
     student = models.ForeignKey(StudentUser, related_name="sub_category_two_student_users",
-                                   on_delete=models.CASCADE,
-                                   null=True,
-                                   blank=True)
+                                on_delete=models.CASCADE,
+                                null=True,
+                                blank=True)
     sub_title = models.ForeignKey(
         SubCategoryTwo,
         on_delete=models.CASCADE,
@@ -129,7 +129,6 @@ class SubCategoryTwoUser(BaseModel):
         self.save()
 
 
-
 class SubCategoryTwoFile(BaseModel):
     sub_title = models.ForeignKey(
         SubCategoryTwo,
@@ -143,7 +142,7 @@ class SubCategoryTwoFile(BaseModel):
     is_approved = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.sub_title)
+        return f"{self.sub_title}: {self.student}"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
