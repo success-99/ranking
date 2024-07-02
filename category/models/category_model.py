@@ -39,7 +39,7 @@ class CategoryOne(BaseModel):
 
 
 class CategoryOneUser(BaseModel):
-    student = models.OneToOneField(StudentUser, related_name="category_one_student_users", on_delete=models.CASCADE,
+    student = models.ForeignKey(StudentUser, related_name="category_one_student_users", on_delete=models.CASCADE,
                                    null=True, blank=True)
     title = models.ForeignKey(
         CategoryOne,
@@ -70,7 +70,7 @@ class CategoryTwo(BaseModel):
 
 
 class CategoryTwoUser(BaseModel):
-    student = models.OneToOneField(StudentUser, related_name="category_two_student_users", on_delete=models.CASCADE,
+    student = models.ForeignKey(StudentUser, related_name="category_two_student_users", on_delete=models.CASCADE,
                                    null=True,
                                    blank=True)
     title = models.ForeignKey(
@@ -100,7 +100,7 @@ class SubCategoryTwo(BaseModel):
 
 
 class SubCategoryTwoUser(BaseModel):
-    student = models.OneToOneField(StudentUser, related_name="sub_category_two_student_users",
+    student = models.ForeignKey(StudentUser, related_name="sub_category_two_student_users",
                                    on_delete=models.CASCADE,
                                    null=True,
                                    blank=True)
@@ -119,11 +119,15 @@ class SubCategoryTwoUser(BaseModel):
 
     def update_mark_based_on_approved_files(self):
         # Count the approved files for this student and subcategory
-        approved_file_count = self.sub_title.sub_category_two_title_files.filter(is_approved=True,
-                                                                                 student=self.student).count()
+        approved_file_count = SubCategoryTwoFile.objects.filter(
+            sub_title=self.sub_title,
+            student=self.student,
+            is_approved=True
+        ).count()
         # Update the mark field
         self.mark = approved_file_count
         self.save()
+
 
 
 class SubCategoryTwoFile(BaseModel):
@@ -139,12 +143,13 @@ class SubCategoryTwoFile(BaseModel):
     is_approved = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.title)
+        return str(self.sub_title)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        # Update the mark for the related SubCategoryTwo instance
-        self.sub_title.update_mark_based_on_approved_files()
+        # Update the mark for the related SubCategoryTwoUser instance
+        sub_category_user = SubCategoryTwoUser.objects.get(sub_title=self.sub_title, student=self.student)
+        sub_category_user.update_mark_based_on_approved_files()
 
 
 @receiver(post_delete, sender=SubCategoryTwoFile)
