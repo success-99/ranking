@@ -4,7 +4,8 @@ from rest_framework_simplejwt.views import TokenBlacklistView, TokenRefreshView,
 
 from .views import TotalDocRetrieveListModelMixinView, TotalDocUserRetrieveListModelMixinView,\
     TotalDocTeacherMarkUpdateModelMixinView, CategoryOneRetrieveListModelMixinView, \
-    CategoryOneUserRetrieveListModelMixinView, CategoryOneStudentFileUpdateModelMixinView, CategoryOneTeacherUpdateMarkModelMixinView
+    CategoryOneUserRetrieveListModelMixinView, CategoryOneStudentFileUpdateModelMixinView,\
+    CategoryOneTeacherUpdateMarkModelMixinView, CombinedTitleListAPIView
 
 
 router = DefaultRouter()
@@ -31,7 +32,7 @@ router.register('category-one-student-mark-create', CategoryOneTeacherUpdateMark
 urlpatterns = [
 
     path('', include(router.urls)),
-    # path('all-category-title/', CombinedTitleListAPIView.as_view(), name='all_category_title'),
+    path('all-category-title/', CombinedTitleListAPIView.as_view(), name='all_category_title'),
 
     #     path('user-list/', UsersListApiView.as_view(), name='list'),
     #     path('user-detail/<int:pk>/', UserDetailApiView.as_view(), name='user-detail'),

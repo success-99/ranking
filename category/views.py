@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from .serializers import TotalDocListModelSerializers, TotalDocUserTeacherMarkModelSerializers, \
     TotalDocUserListModelSerializers, CategoryOneListModelSerializers, CategoryOneUserListModelSerializers, \
-    CategoryOneStudentFileCreateModelSerializers, CategoryOneTeacherMarkCreateModelSerializers
+    CategoryOneStudentFileCreateModelSerializers, CategoryOneTeacherMarkCreateModelSerializers, CombinedTitleSerializer
 
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.pagination import LimitOffsetPagination
@@ -171,22 +171,22 @@ class CategoryOneTeacherUpdateMarkModelMixinView(mixins.UpdateModelMixin,
 #     serializer_class = SubCategoryTwoFileModelSerializers
 #
 #
-# class CombinedTitleListAPIView(generics.ListAPIView):
-#     serializer_class = CombinedTitleSerializer
-#
-#     def get_queryset(self):
-#         category_one_titles = CategoryOne.objects.all().values('title')
-#         category_two_titles = CategoryTwo.objects.all().values('title')
-#
-#         combined_titles = [{'title': item['title'], 'source': 'CategoryOne'} for item in category_one_titles]
-#         combined_titles += [{'title': item['title'], 'source': 'CategoryTwo'} for item in category_two_titles]
-#
-#         return combined_titles
-#
-#     def list(self, request, *args, **kwargs):
-#         queryset = self.get_queryset()
-#         serializer = self.get_serializer(queryset, many=True)
-#         return Response(serializer.data)
+class CombinedTitleListAPIView(generics.ListAPIView):
+    serializer_class = CombinedTitleSerializer
+
+    def get_queryset(self):
+        category_one_titles = CategoryOne.objects.all().values('title')
+        category_two_titles = CategoryTwo.objects.all().values('title')
+
+        combined_titles = [{'title': item['title'], 'source': 'CategoryOne'} for item in category_one_titles]
+        combined_titles += [{'title': item['title'], 'source': 'CategoryTwo'} for item in category_two_titles]
+
+        return combined_titles
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 #     # lookup_field = 'category'
 #

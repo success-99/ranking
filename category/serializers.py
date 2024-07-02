@@ -59,72 +59,78 @@ class CategoryOneTeacherMarkCreateModelSerializers(serializers.ModelSerializer):
         fields = ['id', 'mark']
 
 
-
-
-
-class CategoryTwoModelSerializers(serializers.ModelSerializer):
+# CategoryTwo model serializers
+class CategoryTwoListModelSerializers(serializers.ModelSerializer):
     class Meta:
         model = CategoryTwo
         fields = ['id', 'title']
 
 
-class SubCategoryTwoModelSerializers(serializers.ModelSerializer):
-    title = serializers.CharField(source='title.title')
-
-    class Meta:
-        model = SubCategoryTwo
-        fields = ['id', 'title', 'sub_title']
 
 
-class SubCategoryTwoFileModelSerializers(serializers.ModelSerializer):
-    title = serializers.CharField(source='title.title')
-    student = serializers.CharField(source='student.user.get_full_name')
-
-    class Meta:
-        model = SubCategoryTwoFile
-        fields = ['id', 'title', 'student', 'file', 'is_approved']
-
-
-class CategoryOneTeacherStudentMarkModelSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = CategoryOneUser
-        fields = ['mark']
-
-
-class CategoryOneStudentModelSerializers(serializers.ModelSerializer):
-    file = serializers.FileField()
-
-    class Meta:
-        model = CategoryOne
-        fields = ['file']
-
-    def validate_file(self, value):
-        valid_extensions = ['.pdf', '.jpg', '.png', '.jpeg']
-        ext = os.path.splitext(value.name)[1]
-        if not ext.lower() in valid_extensions:
-            raise serializers.ValidationError("Fayl .pdf, .jpg, .png .jpeg turidan birida bo'lishi kerak")
-        return value
-
-
-class SubCategoryTwoFileStudentModelSerializers(serializers.ModelSerializer):
-    file = serializers.FileField()
-
-    class Meta:
-        model = SubCategoryTwoFile
-        fields = ['title', 'file', 'student']
-        extra_kwargs = {
-            'is_approved': {'required': False}
-
-        }
-
-    def validate_file(self, value):
-        valid_extensions = ['.pdf', '.jpg', '.png', '.jpeg']
-        ext = os.path.splitext(value.name)[1]
-        if not ext.lower() in valid_extensions:
-            raise serializers.ValidationError("Fayl .pdf, .jpg, .png .jpeg turidan birida bo'lishi kerak")
-        return value
-
-
+# class CategoryTwoModelSerializers(serializers.ModelSerializer):
+#     class Meta:
+#         model = CategoryTwo
+#         fields = ['id', 'title']
+#
+#
+# class SubCategoryTwoModelSerializers(serializers.ModelSerializer):
+#     title = serializers.CharField(source='title.title')
+#
+#     class Meta:
+#         model = SubCategoryTwo
+#         fields = ['id', 'title', 'sub_title']
+#
+#
+# class SubCategoryTwoFileModelSerializers(serializers.ModelSerializer):
+#     title = serializers.CharField(source='title.title')
+#     student = serializers.CharField(source='student.user.get_full_name')
+#
+#     class Meta:
+#         model = SubCategoryTwoFile
+#         fields = ['id', 'title', 'student', 'file', 'is_approved']
+#
+#
+# class CategoryOneTeacherStudentMarkModelSerializers(serializers.ModelSerializer):
+#     class Meta:
+#         model = CategoryOneUser
+#         fields = ['mark']
+#
+#
+# class CategoryOneStudentModelSerializers(serializers.ModelSerializer):
+#     file = serializers.FileField()
+#
+#     class Meta:
+#         model = CategoryOne
+#         fields = ['file']
+#
+#     def validate_file(self, value):
+#         valid_extensions = ['.pdf', '.jpg', '.png', '.jpeg']
+#         ext = os.path.splitext(value.name)[1]
+#         if not ext.lower() in valid_extensions:
+#             raise serializers.ValidationError("Fayl .pdf, .jpg, .png .jpeg turidan birida bo'lishi kerak")
+#         return value
+#
+#
+# class SubCategoryTwoFileStudentModelSerializers(serializers.ModelSerializer):
+#     file = serializers.FileField()
+#
+#     class Meta:
+#         model = SubCategoryTwoFile
+#         fields = ['title', 'file', 'student']
+#         extra_kwargs = {
+#             'is_approved': {'required': False}
+#
+#         }
+#
+#     def validate_file(self, value):
+#         valid_extensions = ['.pdf', '.jpg', '.png', '.jpeg']
+#         ext = os.path.splitext(value.name)[1]
+#         if not ext.lower() in valid_extensions:
+#             raise serializers.ValidationError("Fayl .pdf, .jpg, .png .jpeg turidan birida bo'lishi kerak")
+#         return value
+#
+#
 class CombinedTitleSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=255)
     source = serializers.CharField(max_length=50)
