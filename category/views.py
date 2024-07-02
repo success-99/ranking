@@ -4,14 +4,15 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from .serializers import TotalDocListModelSerializers, TotalDocUserTeacherMarkModelSerializers, \
     TotalDocUserListModelSerializers, CategoryOneListModelSerializers, CategoryOneUserListModelSerializers, \
-    CategoryOneStudentFileCreateModelSerializers, CategoryOneTeacherMarkCreateModelSerializers, CombinedTitleSerializer
+    CategoryOneStudentFileCreateModelSerializers, CategoryOneTeacherMarkCreateModelSerializers, CombinedTitleSerializer,\
+    CategoryTwoListModelSerializers, CategoryTwoUserListModelSerializers, SubCategoryTwoListModelSerializers
 
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.pagination import LimitOffsetPagination
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 from .models import TotalDoc, CategoryOne, SubCategoryTwoFile, CategoryTwo, SubCategoryTwo, TotalDocUser, \
-    CategoryOneUser
+    CategoryOneUser, CategoryTwoUser
 from users.permissions import IsStudent, IsTeacher, IsSuperAdmin
 
 
@@ -94,8 +95,37 @@ class CategoryOneTeacherUpdateMarkModelMixinView(mixins.UpdateModelMixin,
             return super().get_permissions()
 
 
+# CategoryTwo model views
+class CategoryTwoRetrieveListModelMixinView(mixins.RetrieveModelMixin,
+                                            mixins.ListModelMixin,
+                                            GenericViewSet):
+    permission_classes = (AllowAny,)
+    queryset = CategoryTwo.objects.all()
+    serializer_class = CategoryTwoListModelSerializers
 
-#
+
+# CategoryTwoUser model views
+class CategoryTwoUserRetrieveListModelMixinView(mixins.RetrieveModelMixin,
+                                                mixins.ListModelMixin,
+                                                GenericViewSet):
+    permission_classes = (AllowAny,)
+    queryset = CategoryTwoUser.objects.all()
+    serializer_class = CategoryTwoUserListModelSerializers
+
+
+
+class SubCategoryTwoRetrieveListModelMixinView(mixins.RetrieveModelMixin,
+                                                mixins.ListModelMixin,
+                                                GenericViewSet):
+    permission_classes = (AllowAny,)
+    queryset = SubCategoryTwo.objects.all()
+    serializer_class = SubCategoryTwoListModelSerializers
+
+
+
+
+
+
 # class CategoryOneTeacherModelViewSet(mixins.UpdateModelMixin,
 #                                      GenericViewSet):
 #     queryset = CategoryOne.objects.all()

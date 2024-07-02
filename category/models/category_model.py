@@ -16,7 +16,7 @@ class TotalDoc(BaseModel):
 
 
 class TotalDocUser(BaseModel):
-    student = models.ForeignKey(StudentUser, related_name="total_doc_student_users", on_delete=models.SET_NULL,
+    student = models.ForeignKey(StudentUser, related_name="total_doc_student_users", on_delete=models.CASCADE,
                                 null=True, blank=True)
     title = models.ForeignKey(
         TotalDoc,
@@ -39,7 +39,7 @@ class CategoryOne(BaseModel):
 
 
 class CategoryOneUser(BaseModel):
-    student = models.OneToOneField(StudentUser, related_name="category_one_student_users", on_delete=models.SET_NULL,
+    student = models.OneToOneField(StudentUser, related_name="category_one_student_users", on_delete=models.CASCADE,
                                    null=True, blank=True)
     title = models.ForeignKey(
         CategoryOne,
@@ -70,7 +70,7 @@ class CategoryTwo(BaseModel):
 
 
 class CategoryTwoUser(BaseModel):
-    student = models.OneToOneField(StudentUser, related_name="category_two_student_users", on_delete=models.SET_NULL,
+    student = models.OneToOneField(StudentUser, related_name="category_two_student_users", on_delete=models.CASCADE,
                                    null=True,
                                    blank=True)
     title = models.ForeignKey(
@@ -101,7 +101,7 @@ class SubCategoryTwo(BaseModel):
 
 class SubCategoryTwoUser(BaseModel):
     student = models.OneToOneField(StudentUser, related_name="sub_category_two_student_users",
-                                   on_delete=models.SET_NULL,
+                                   on_delete=models.CASCADE,
                                    null=True,
                                    blank=True)
     sub_title = models.ForeignKey(

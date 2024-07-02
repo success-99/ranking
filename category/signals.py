@@ -20,7 +20,7 @@ def create_models(instance):
     if SubCategoryTwo.objects.exists():
         sub_category_twos = SubCategoryTwo.objects.all()
         for sub_category_two in sub_category_twos:
-            SubCategoryTwoUser.objects.create(student=instance, title=sub_category_two)
+            SubCategoryTwoUser.objects.create(student=instance, sub_title=sub_category_two)
     if TotalDoc.objects.exists():
         total_docs = TotalDoc.objects.all()
         for total_doc in total_docs:
@@ -36,11 +36,6 @@ def create_models(instance):
 def create_category_two_users(sender, instance, created, **kwargs):
     if created:
         transaction.on_commit(lambda: _create_related_users(instance, CategoryTwoUser))
-
-@receiver(post_save, sender=SubCategoryTwo)
-def create_sub_category_two_users(sender, instance, created, **kwargs):
-    if created:
-        transaction.on_commit(lambda: _create_related_users(instance, SubCategoryTwoUser))
 
 @receiver(post_save, sender=TotalDoc)
 def create_total_doc_users(sender, instance, created, **kwargs):

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import TotalDoc, CategoryOne, SubCategoryTwoFile, CategoryTwo, SubCategoryTwo, SubCategoryTwoUser, \
-    CategoryOneUser, TotalDocUser
+    CategoryOneUser, TotalDocUser, CategoryTwoUser
 import os
 
 
@@ -64,6 +64,37 @@ class CategoryTwoListModelSerializers(serializers.ModelSerializer):
     class Meta:
         model = CategoryTwo
         fields = ['id', 'title']
+
+
+# CategoryTwoUser model serializers
+class CategoryTwoUserListModelSerializers(serializers.ModelSerializer):
+    student = serializers.CharField(source='student.user.get_full_name')
+    title = serializers.CharField(source='title.title')
+
+    class Meta:
+        model = CategoryTwoUser
+        fields = ['id', 'student', 'title', 'mark']
+
+
+# SubCategoryTwo model serializers
+class SubCategoryTwoListModelSerializers(serializers.ModelSerializer):
+    title = serializers.CharField(source='title.title')
+
+    class Meta:
+        model = SubCategoryTwo
+        fields = ['id', 'title', 'sub_title']
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

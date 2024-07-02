@@ -5,7 +5,8 @@ from rest_framework_simplejwt.views import TokenBlacklistView, TokenRefreshView,
 from .views import TotalDocRetrieveListModelMixinView, TotalDocUserRetrieveListModelMixinView,\
     TotalDocTeacherMarkUpdateModelMixinView, CategoryOneRetrieveListModelMixinView, \
     CategoryOneUserRetrieveListModelMixinView, CategoryOneStudentFileUpdateModelMixinView,\
-    CategoryOneTeacherUpdateMarkModelMixinView, CombinedTitleListAPIView
+    CategoryOneTeacherUpdateMarkModelMixinView, CombinedTitleListAPIView, CategoryTwoRetrieveListModelMixinView,\
+    CategoryTwoUserRetrieveListModelMixinView, SubCategoryTwoRetrieveListModelMixinView
 
 
 router = DefaultRouter()
@@ -14,10 +15,17 @@ router = DefaultRouter()
 router.register('total-doc-list', TotalDocRetrieveListModelMixinView, basename='total_doc_list')
 router.register('total-doc-student-list', TotalDocUserRetrieveListModelMixinView, basename='total_doc_student_list')
 router.register('total-doc-student-mark-update', TotalDocTeacherMarkUpdateModelMixinView, basename='total_doc_student_mark_update')
+
 router.register('category-one-list', CategoryOneRetrieveListModelMixinView, basename='category_one_list')
-router.register('category-one-student-file-list', CategoryOneUserRetrieveListModelMixinView, basename='category_one_student_file_list')
+router.register('category-one-student-list', CategoryOneUserRetrieveListModelMixinView, basename='category_one_student_file_list')
 router.register('category-one-student-file-create', CategoryOneStudentFileUpdateModelMixinView, basename='category_one_student_file_create')
 router.register('category-one-student-mark-create', CategoryOneTeacherUpdateMarkModelMixinView, basename='category_one_student_mark_create')
+
+router.register('category-two-list', CategoryTwoRetrieveListModelMixinView, basename='category_two_list')
+router.register('category-two-student-list', CategoryTwoUserRetrieveListModelMixinView, basename='category_one_student_list')
+
+router.register('subcategory-two-list', SubCategoryTwoRetrieveListModelMixinView, basename='subcategory_two_list')
+
 
 
 # router.register('subcategory-two-file', SubCategoryTwoFileModelViewSet, basename='subcategory_two_file')
