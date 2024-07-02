@@ -31,26 +31,26 @@ def create_models(instance):
             CategoryOneUser.objects.create(student=instance, title=category_one)
 
 
-
-@receiver(post_save, sender=CategoryTwo)
-def create_category_two_users(sender, instance, created, **kwargs):
-    if created:
-        transaction.on_commit(lambda: _create_related_users(instance, CategoryTwoUser))
-
-@receiver(post_save, sender=TotalDoc)
-def create_total_doc_users(sender, instance, created, **kwargs):
-    if created:
-        transaction.on_commit(lambda: _create_related_users(instance, TotalDocUser))
-
-@receiver(post_save, sender=CategoryOne)
-def create_category_one_users(sender, instance, created, **kwargs):
-    if created:
-        transaction.on_commit(lambda: _create_related_users(instance, CategoryOneUser))
-
-def _create_related_users(instance, UserClass):
-    students = StudentUser.objects.all()
-    for student in students:
-        UserClass.objects.create(student=student, title=instance)
+#
+# @receiver(post_save, sender=CategoryTwo)
+# def create_category_two_users(sender, instance, created, **kwargs):
+#     if created:
+#         transaction.on_commit(lambda: _create_related_users(instance, CategoryTwoUser))
+#
+# @receiver(post_save, sender=TotalDoc)
+# def create_total_doc_users(sender, instance, created, **kwargs):
+#     if created:
+#         transaction.on_commit(lambda: _create_related_users(instance, TotalDocUser))
+#
+# @receiver(post_save, sender=CategoryOne)
+# def create_category_one_users(sender, instance, created, **kwargs):
+#     if created:
+#         transaction.on_commit(lambda: _create_related_users(instance, CategoryOneUser))
+#
+# def _create_related_users(instance, UserClass):
+#     students = StudentUser.objects.all()
+#     for student in students:
+#         UserClass.objects.create(student=student, title=instance)
 
 
 # # post_save signal uchun receiver
