@@ -205,11 +205,16 @@ class CombinedTitleListAPIView(generics.ListAPIView):
     serializer_class = CombinedTitleSerializer
 
     def get_queryset(self):
-        category_one_titles = CategoryOne.objects.all().values('title')
-        category_two_titles = CategoryTwo.objects.all().values('title')
+        total_doc_titles = TotalDoc.objects.all().values('id', 'title')
+        category_one_titles = CategoryOne.objects.all().values('id', 'title')
+        category_two_titles = CategoryTwo.objects.all().values('id', 'title')
 
-        combined_titles = [{'title': item['title'], 'source': 'CategoryOne'} for item in category_one_titles]
-        combined_titles += [{'title': item['title'], 'source': 'CategoryTwo'} for item in category_two_titles]
+        combined_titles = [{'id': item['id'], 'title': item['title'], 'source': 'TotalDoc'} for item in
+                           total_doc_titles]
+        combined_titles += [{'id': item['id'], 'title': item['title'], 'source': 'CategoryOne'} for item in
+                            category_one_titles]
+        combined_titles += [{'id': item['id'], 'title': item['title'], 'source': 'CategoryTwo'} for item in
+                            category_two_titles]
 
         return combined_titles
 
