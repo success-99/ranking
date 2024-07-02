@@ -2,7 +2,10 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenBlacklistView, TokenRefreshView, TokenObtainPairView
 
-from .views import TotalDocRetrieveListModelMixinView, TotalDocUserRetrieveListModelMixinView, TotalDocTeacherMarkUpdateModelMixinView, CategoryOneRetrieveListModelMixinView
+from .views import TotalDocRetrieveListModelMixinView, TotalDocUserRetrieveListModelMixinView,\
+    TotalDocTeacherMarkUpdateModelMixinView, CategoryOneRetrieveListModelMixinView, \
+    CategoryOneUserRetrieveListModelMixinView, CategoryOneStudentFileUpdateModelMixinView, CategoryOneTeacherUpdateMarkModelMixinView
+
 
 router = DefaultRouter()
 
@@ -11,6 +14,11 @@ router.register('total-doc-list', TotalDocRetrieveListModelMixinView, basename='
 router.register('total-doc-student-list', TotalDocUserRetrieveListModelMixinView, basename='total_doc_student_list')
 router.register('total-doc-student-mark-update', TotalDocTeacherMarkUpdateModelMixinView, basename='total_doc_student_mark_update')
 router.register('category-one-list', CategoryOneRetrieveListModelMixinView, basename='category_one_list')
+router.register('category-one-student-file-list', CategoryOneUserRetrieveListModelMixinView, basename='category_one_student_file_list')
+router.register('category-one-student-file-create', CategoryOneStudentFileUpdateModelMixinView, basename='category_one_student_file_create')
+router.register('category-one-student-mark-create', CategoryOneTeacherUpdateMarkModelMixinView, basename='category_one_student_mark_create')
+
+
 # router.register('subcategory-two-file', SubCategoryTwoFileModelViewSet, basename='subcategory_two_file')
 #
 #

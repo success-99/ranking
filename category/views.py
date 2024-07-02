@@ -3,13 +3,15 @@ from rest_framework import status, parsers, mixins, generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from .serializers import TotalDocListModelSerializers, TotalDocUserTeacherMarkModelSerializers, \
-    TotalDocUserListModelSerializers, CategoryOneListModelSerializers
+    TotalDocUserListModelSerializers, CategoryOneListModelSerializers, CategoryOneUserListModelSerializers, \
+    CategoryOneStudentFileCreateModelSerializers, CategoryOneTeacherMarkCreateModelSerializers
 
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.pagination import LimitOffsetPagination
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
-from .models import TotalDoc, CategoryOne, SubCategoryTwoFile, CategoryTwo, SubCategoryTwo, TotalDocUser
+from .models import TotalDoc, CategoryOne, SubCategoryTwoFile, CategoryTwo, SubCategoryTwo, TotalDocUser, \
+    CategoryOneUser
 from users.permissions import IsStudent, IsTeacher, IsSuperAdmin
 
 
@@ -51,6 +53,47 @@ class CategoryOneRetrieveListModelMixinView(mixins.RetrieveModelMixin,
     permission_classes = (AllowAny,)
     queryset = CategoryOne.objects.all()
     serializer_class = CategoryOneListModelSerializers
+
+
+# CategoryOneUser model views
+class CategoryOneUserRetrieveListModelMixinView(mixins.RetrieveModelMixin,
+                                                mixins.ListModelMixin,
+                                                GenericViewSet):
+    permission_classes = (AllowAny,)
+    queryset = CategoryOneUser.objects.all()
+    serializer_class = CategoryOneUserListModelSerializers
+
+
+class CategoryOneStudentFileUpdateModelMixinView(mixins.UpdateModelMixin,
+                                                 GenericViewSet):
+    queryset = CategoryOneUser.objects.all()
+    serializer_class = CategoryOneStudentFileCreateModelSerializers
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
+
+    http_method_names = ['patch']
+
+    def get_permissions(self):
+        if self.request.method in ['PATCH']:
+            return [IsStudent()]
+        else:
+            return super().get_permissions()
+
+
+class CategoryOneTeacherUpdateMarkModelMixinView(mixins.UpdateModelMixin,
+                                                 GenericViewSet):
+    queryset = CategoryOneUser.objects.all()
+    serializer_class = CategoryOneTeacherMarkCreateModelSerializers
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
+
+    http_method_names = ['patch']
+
+    def get_permissions(self):
+        if self.request.method in ['PATCH']:
+            return [IsTeacher()]
+        else:
+            return super().get_permissions()
+
+
 
 #
 # class CategoryOneTeacherModelViewSet(mixins.UpdateModelMixin,
