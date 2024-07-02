@@ -163,6 +163,7 @@ class SubCategoryTwoListModelSerializers(serializers.ModelSerializer):
 #
 #
 class CombinedTitleSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     title = serializers.CharField(max_length=255)
     source = serializers.CharField(max_length=50)
 
