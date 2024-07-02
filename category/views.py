@@ -4,8 +4,10 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from .serializers import TotalDocListModelSerializers, TotalDocUserTeacherMarkModelSerializers, \
     TotalDocUserListModelSerializers, CategoryOneListModelSerializers, CategoryOneUserListModelSerializers, \
-    CategoryOneStudentFileCreateModelSerializers, CategoryOneTeacherMarkCreateModelSerializers, CombinedTitleSerializer,\
-    CategoryTwoListModelSerializers, CategoryTwoUserListModelSerializers, SubCategoryTwoListModelSerializers, SubCategoryTwoStudentListModelSerializers
+    CategoryOneStudentFileCreateModelSerializers, CategoryOneTeacherMarkCreateModelSerializers, CombinedTitleSerializer, \
+    CategoryTwoListModelSerializers, CategoryTwoUserListModelSerializers, SubCategoryTwoListModelSerializers, \
+    SubCategoryTwoStudentListModelSerializers, SubCategoryTwoFileStudentFileCreateModelSerializers, \
+    SubCategoryTwoFileStudentFileListModelSerializers, SubCategoryTwoFileTeacherIsApprovedUpdateModelSerializers
 
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.pagination import LimitOffsetPagination
@@ -113,23 +115,59 @@ class CategoryTwoUserRetrieveListModelMixinView(mixins.RetrieveModelMixin,
     serializer_class = CategoryTwoUserListModelSerializers
 
 
-
 class SubCategoryTwoRetrieveListModelMixinView(mixins.RetrieveModelMixin,
-                                                mixins.ListModelMixin,
-                                                GenericViewSet):
+                                               mixins.ListModelMixin,
+                                               GenericViewSet):
     permission_classes = (AllowAny,)
     queryset = SubCategoryTwo.objects.all()
     serializer_class = SubCategoryTwoListModelSerializers
 
 
 class SubCategoryTwoStudentRetrieveListModelMixinView(mixins.RetrieveModelMixin,
-                                                mixins.ListModelMixin,
-                                                GenericViewSet):
+                                                      mixins.ListModelMixin,
+                                                      GenericViewSet):
     permission_classes = (AllowAny,)
     queryset = SubCategoryTwoUser.objects.all()
     serializer_class = SubCategoryTwoStudentListModelSerializers
 
 
+# SubCategoryTwoFile model view
+class SubCategoryTwoFileStudentRetrieveListModelMixinView(mixins.RetrieveModelMixin,
+                                                          mixins.ListModelMixin,
+                                                          GenericViewSet):
+    permission_classes = (AllowAny,)
+    queryset = SubCategoryTwoFile.objects.all()
+    serializer_class = SubCategoryTwoFileStudentFileListModelSerializers
+
+
+class SubCategoryTwoFileStudentUpdateModelMixinView(mixins.UpdateModelMixin,
+                                                    GenericViewSet):
+    queryset = SubCategoryTwoFile.objects.all()
+    serializer_class = SubCategoryTwoFileStudentFileCreateModelSerializers
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
+
+    http_method_names = ['patch']
+
+    def get_permissions(self):
+        if self.request.method in ['PATCH']:
+            return [IsStudent()]
+        else:
+            return super().get_permissions()
+
+
+class SubCategoryTwoFileTeacherIsApprovedUpdateModelMixinView(mixins.UpdateModelMixin,
+                                                    GenericViewSet):
+    queryset = SubCategoryTwoFile.objects.all()
+    serializer_class = SubCategoryTwoFileTeacherIsApprovedUpdateModelSerializers
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
+
+    http_method_names = ['patch']
+
+    def get_permissions(self):
+        if self.request.method in ['PATCH']:
+            return [IsTeacher()]
+        else:
+            return super().get_permissions()
 
 # class CategoryOneTeacherModelViewSet(mixins.UpdateModelMixin,
 #                                      GenericViewSet):

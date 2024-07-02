@@ -95,12 +95,30 @@ class SubCategoryTwoStudentListModelSerializers(serializers.ModelSerializer):
         fields = ['id', 'student', 'sub_title', 'mark']
 
 
+# SubCategoryTwoFile model serializers
+class SubCategoryTwoFileStudentFileListModelSerializers(serializers.ModelSerializer):
+    student = serializers.CharField(source='student.user.get_full_name')
+    sub_title = serializers.CharField(source='sub_title.sub_title')
+
+    class Meta:
+        model = SubCategoryTwoFile
+        fields = ['id', 'student', 'sub_title', 'file', 'is_approved']
 
 
+class SubCategoryTwoFileStudentFileCreateModelSerializers(serializers.ModelSerializer):
+    file = serializers.FileField()
+
+    class Meta:
+        model = SubCategoryTwoFile
+        fields = ['id', 'file']
 
 
+class SubCategoryTwoFileTeacherIsApprovedUpdateModelSerializers(serializers.ModelSerializer):
+    is_approved = serializers.BooleanField(default=False)
 
-
+    class Meta:
+        model = SubCategoryTwoFile
+        fields = ['id', 'is_approved']
 
 
 

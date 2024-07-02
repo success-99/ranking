@@ -6,7 +6,9 @@ from .views import TotalDocRetrieveListModelMixinView, TotalDocUserRetrieveListM
     TotalDocTeacherMarkUpdateModelMixinView, CategoryOneRetrieveListModelMixinView, \
     CategoryOneUserRetrieveListModelMixinView, CategoryOneStudentFileUpdateModelMixinView,\
     CategoryOneTeacherUpdateMarkModelMixinView, CombinedTitleListAPIView, CategoryTwoRetrieveListModelMixinView,\
-    CategoryTwoUserRetrieveListModelMixinView, SubCategoryTwoRetrieveListModelMixinView, SubCategoryTwoStudentRetrieveListModelMixinView
+    CategoryTwoUserRetrieveListModelMixinView, SubCategoryTwoRetrieveListModelMixinView,\
+    SubCategoryTwoStudentRetrieveListModelMixinView, SubCategoryTwoFileStudentRetrieveListModelMixinView,\
+    SubCategoryTwoFileStudentUpdateModelMixinView, SubCategoryTwoFileTeacherIsApprovedUpdateModelMixinView
 
 
 router = DefaultRouter()
@@ -14,12 +16,12 @@ router = DefaultRouter()
 
 router.register('total-doc-list', TotalDocRetrieveListModelMixinView, basename='total_doc_list')
 router.register('total-doc-student-list', TotalDocUserRetrieveListModelMixinView, basename='total_doc_student_list')
-router.register('total-doc-student-mark-update', TotalDocTeacherMarkUpdateModelMixinView, basename='total_doc_student_mark_update')
+router.register('total-doc-student-mark-update-teacher', TotalDocTeacherMarkUpdateModelMixinView, basename='total_doc_student_mark_update')
 
 router.register('category-one-list', CategoryOneRetrieveListModelMixinView, basename='category_one_list')
 router.register('category-one-student-list', CategoryOneUserRetrieveListModelMixinView, basename='category_one_student_file_list')
-router.register('category-one-student-file-create', CategoryOneStudentFileUpdateModelMixinView, basename='category_one_student_file_create')
-router.register('category-one-student-mark-create', CategoryOneTeacherUpdateMarkModelMixinView, basename='category_one_student_mark_create')
+router.register('category-one-student-file-update', CategoryOneStudentFileUpdateModelMixinView, basename='category_one_student_file_create')
+router.register('category-one-student-mark-update-teacher', CategoryOneTeacherUpdateMarkModelMixinView, basename='category_one_student_mark_create')
 
 router.register('category-two-list', CategoryTwoRetrieveListModelMixinView, basename='category_two_list')
 router.register('category-two-student-list', CategoryTwoUserRetrieveListModelMixinView, basename='category_one_student_list')
@@ -28,6 +30,10 @@ router.register('subcategory-two-list', SubCategoryTwoRetrieveListModelMixinView
 
 router.register('subcategory-two-student-list', SubCategoryTwoStudentRetrieveListModelMixinView, basename='subcategory_two_student_list')
 
+router.register('subcategory-two-file-student-list', SubCategoryTwoFileStudentRetrieveListModelMixinView, basename='subcategory_two_file_student_list')
+router.register('subcategory-two-file-update-student', SubCategoryTwoFileStudentUpdateModelMixinView, basename='subcategory_two_file_update_student')
+
+router.register('subcategory-two-file-is_approved-update-teacher', SubCategoryTwoFileTeacherIsApprovedUpdateModelMixinView, basename='subcategory_two_file_is_approved_update_teacher')
 
 
 # router.register('subcategory-two-file', SubCategoryTwoFileModelViewSet, basename='subcategory_two_file')
