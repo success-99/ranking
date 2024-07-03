@@ -16,7 +16,7 @@ router = DefaultRouter()
 
 router.register('total-doc-list', TotalDocRetrieveListModelMixinView, basename='total_doc_list')
 router.register('total-doc-student-list', TotalDocUserRetrieveListModelMixinView, basename='total_doc_student_list')
-router.register('total-doc-student-mark-update-teacher', TotalDocTeacherMarkUpdateModelMixinView, basename='total_doc_student_mark_update')
+router.register('total-doc-student-mark-create-teacher', TotalDocTeacherMarkUpdateModelMixinView, basename='total_doc_student_mark_update')
 
 router.register('category-one-list', CategoryOneRetrieveListModelMixinView, basename='category_one_list')
 router.register('category-one-student-list', CategoryOneUserRetrieveListModelMixinView, basename='category_one_student_file_list')

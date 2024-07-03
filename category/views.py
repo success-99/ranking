@@ -40,10 +40,10 @@ class TotalDocTeacherMarkUpdateModelMixinView(mixins.UpdateModelMixin,
                                               GenericViewSet):
     queryset = TotalDocUser.objects.all()
     serializer_class = TotalDocUserTeacherMarkModelSerializers
-    http_method_names = ['patch']
+    http_method_names = ['post']
 
     def get_permissions(self):
-        if self.request.method in ['PATCH']:
+        if self.request.method in ['POST']:
             return [IsTeacher()]
         else:
             return super().get_permissions()
@@ -88,10 +88,10 @@ class CategoryOneTeacherUpdateMarkModelMixinView(mixins.UpdateModelMixin,
     serializer_class = CategoryOneTeacherMarkCreateModelSerializers
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
 
-    http_method_names = ['patch']
+    http_method_names = ['post']
 
     def get_permissions(self):
-        if self.request.method in ['PATCH']:
+        if self.request.method in ['POST']:
             return [IsTeacher()]
         else:
             return super().get_permissions()

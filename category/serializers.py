@@ -24,7 +24,7 @@ class TotalDocUserListModelSerializers(serializers.ModelSerializer):
 class TotalDocUserTeacherMarkModelSerializers(serializers.ModelSerializer):
     class Meta:
         model = TotalDocUser
-        fields = ['id', 'mark']
+        fields = ['id', 'student', 'title', 'mark']
 
 
 # CategoryOne model serializers
