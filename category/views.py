@@ -67,16 +67,16 @@ class CategoryOneUserRetrieveListModelMixinView(mixins.RetrieveModelMixin,
     serializer_class = CategoryOneUserListModelSerializers
 
 
-class CategoryOneStudentFileUpdateModelMixinView(mixins.UpdateModelMixin,
+class CategoryOneStudentFileCreateModelMixinView(mixins.CreateModelMixin,
                                                  GenericViewSet):
     queryset = CategoryOneUser.objects.all()
     serializer_class = CategoryOneStudentFileCreateModelSerializers
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
 
-    http_method_names = ['patch']
+    http_method_names = ['post']
 
     def get_permissions(self):
-        if self.request.method in ['PATCH']:
+        if self.request.method in ['POST']:
             return [IsStudent()]
         else:
             return super().get_permissions()
@@ -140,19 +140,21 @@ class SubCategoryTwoFileStudentRetrieveListModelMixinView(mixins.RetrieveModelMi
     serializer_class = SubCategoryTwoFileStudentFileListModelSerializers
 
 
-class SubCategoryTwoFileStudentUpdateModelMixinView(mixins.UpdateModelMixin,
-                                                    GenericViewSet):
+
+class SubCategoryTwoFileStudentCreateModelMixinView(mixins.CreateModelMixin,
+                                                 GenericViewSet):
     queryset = SubCategoryTwoFile.objects.all()
     serializer_class = SubCategoryTwoFileStudentFileCreateModelSerializers
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
 
-    http_method_names = ['patch']
+    http_method_names = ['post']
 
     def get_permissions(self):
-        if self.request.method in ['PATCH']:
+        if self.request.method in ['POST']:
             return [IsStudent()]
         else:
             return super().get_permissions()
+
 
 
 class SubCategoryTwoFileTeacherIsApprovedUpdateModelMixinView(mixins.UpdateModelMixin,

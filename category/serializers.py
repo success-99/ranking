@@ -49,7 +49,7 @@ class CategoryOneStudentFileCreateModelSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = CategoryOneUser
-        fields = ['id', 'file']
+        fields = ['id', 'student', 'title', 'file']
 
 
 class CategoryOneTeacherMarkCreateModelSerializers(serializers.ModelSerializer):
@@ -110,7 +110,10 @@ class SubCategoryTwoFileStudentFileCreateModelSerializers(serializers.ModelSeria
 
     class Meta:
         model = SubCategoryTwoFile
-        fields = ['id', 'file']
+        fields = ['id', 'student', 'sub_title', 'file']
+
+
+
 
 
 class SubCategoryTwoFileTeacherIsApprovedUpdateModelSerializers(serializers.ModelSerializer):

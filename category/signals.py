@@ -25,10 +25,10 @@ def create_models(instance):
         total_docs = TotalDoc.objects.all()
         for total_doc in total_docs:
             TotalDocUser.objects.create(student=instance, title=total_doc)
-    if CategoryOne.objects.exists():
-        category_ones = CategoryOne.objects.all()
-        for category_one in category_ones:
-            CategoryOneUser.objects.create(student=instance, title=category_one)
+    # if CategoryOne.objects.exists():
+    #     category_ones = CategoryOne.objects.all()
+    #     for category_one in category_ones:
+    #         CategoryOneUser.objects.create(student=instance, title=category_one)
 
 
 #

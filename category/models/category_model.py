@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from django.db.models import Sum
 
 
 class TotalDoc(BaseModel):
@@ -118,15 +119,40 @@ class SubCategoryTwoUser(BaseModel):
         return f"{self.sub_title}: {self.student}"
 
     def update_mark_based_on_approved_files(self):
-        # Count the approved files for this student and subcategory
-        approved_file_count = SubCategoryTwoFile.objects.filter(
-            sub_title=self.sub_title,
-            student=self.student,
-            is_approved=True
-        ).count()
-        # Update the mark field
-        self.mark = approved_file_count
+        subcategories = [
+            ('Axborot tizimi va resurslari yaratilishidagi ishtiroki', 8, 6, 3),
+            ('Talabgorlarning ilmiy jurnallardagi maqolalari', 7, 5, 3),
+            ('Mahalliy va xorijiy konferensiyalardagi tezislari', 5, 3, 0)
+        ]
+
+        total_mark = 0
+
+        for sub_title_str, mark_high, mark_mid, mark_low in subcategories:
+            sub_title_obj = SubCategoryTwo.objects.get(sub_title=sub_title_str)
+            approved_file_count = SubCategoryTwoFile.objects.filter(
+                sub_title=sub_title_obj,
+                student=self.student,
+                is_approved=True
+            ).count()
+
+            if approved_file_count >= 5:
+                total_mark += mark_high
+            elif 3 <= approved_file_count <= 4:
+                total_mark += mark_mid
+            elif 0 < approved_file_count < 3:
+                total_mark += mark_low
+
+        self.mark = total_mark
         self.save()
+
+        subcategory_total_mark = SubCategoryTwoUser.objects.filter(student=self.student).aggregate(Sum('mark'))[
+                                     'mark__sum'] or 0
+
+        # Ushbu studentning CategoryTwoUser dagi mark ni yangilash
+        category_two_user = CategoryTwoUser.objects.get(student=self.student, title=self.sub_title.title)
+        category_two_user.mark = subcategory_total_mark
+        category_two_user.save()
+
 
 
 class SubCategoryTwoFile(BaseModel):
