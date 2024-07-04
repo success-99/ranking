@@ -65,6 +65,18 @@ class LoginView(APIView):
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key}, status=status.HTTP_200_OK)
 
+class LogoutView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            # Tokenni olish va o'chirish
+            token = Token.objects.get(user=request.user)
+            token.delete()
+            return Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
+        except Token.DoesNotExist:
+            return Response({"detail": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
+
 #
 # class AdminRegisterApiView(viewsets.GenericViewSet):
 #     queryset = CustomUser.objects.all()
@@ -185,15 +197,15 @@ class LoginView(APIView):
 # #             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 # #
 # #
-# # class LogoutApiView(APIView):
-# #     permission_classes = (IsAuthenticated,)
-# #
-# #     def post(self, request):
-# #         try:
-# #             refresh_token = request.data["refresh_token"]
-# #             token = RefreshToken(refresh_token)
-# #             token.blacklist()
-# #
-# #             return Response(status=status.HTTP_205_RESET_CONTENT)
-# #         except Exception as e:
-# #             return Response(status=status.HTTP_400_BAD_REQUEST)
+# class LogoutApiView(APIView):
+#     permission_classes = (IsAuthenticated,)
+#
+#     def post(self, request):
+#         try:
+#             refresh_token = request.data["refresh_token"]
+#             token = RefreshToken(refresh_token)
+#             token.blacklist()
+#
+#             return Response(status=status.HTTP_205_RESET_CONTENT)
+#         except Exception as e:
+#             return Response(status=status.HTTP_400_BAD_REQUEST)
