@@ -63,9 +63,26 @@ class LoginView(APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
+        user_type = 'user'
+        user_id = user.id
+
+        # Student yoki Teacher modelini aniqlash
+        try:
+            student = StudentUser.objects.get(user=user)
+            user_type = 'student'
+            user_id = student.id
+        except StudentUser.DoesNotExist:
+            try:
+                teacher = TeacherUser.objects.get(user=user)
+                user_type = 'teacher'
+                user_id = teacher.id
+            except TeacherUser.DoesNotExist:
+                pass
+
         return Response({
             'token': token.key,
-            'user_id': user.id
+            'user_id': user_id,
+            'user_type': user_type
         }, status=status.HTTP_200_OK)
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
