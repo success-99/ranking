@@ -125,6 +125,7 @@ class TeacherUserListSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
+    # id = serializers.IntegerField()
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
