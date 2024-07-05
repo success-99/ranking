@@ -44,6 +44,13 @@ class CategoryOneUserListModelSerializers(serializers.ModelSerializer):
         fields = ['id', 'student', 'title', 'file', 'mark']
 
 
+class CategoryOneUserFilterListModelSerializers(serializers.ModelSerializer):
+    student = serializers.CharField(source='student.user.get_full_name', read_only=True)
+    title = serializers.CharField(source='title.title', read_only=True)
+    class Meta:
+        model = CategoryOneUser
+        fields = ['id', 'student', 'title', 'file', 'mark']
+
 class CategoryOneStudentFileCreateModelSerializers(serializers.ModelSerializer):
     file = serializers.FileField()
 
@@ -103,6 +110,13 @@ class SubCategoryTwoFileStudentFileListModelSerializers(serializers.ModelSeriali
     class Meta:
         model = SubCategoryTwoFile
         fields = ['id', 'student', 'sub_title', 'file', 'is_approved']
+
+class SubCategoryTwoFileStudentFilterListModelSerializers(serializers.ModelSerializer):
+    student = serializers.CharField(source='student.user.get_full_name', read_only=True)
+    sub_title = serializers.CharField(source='sub_title.sub_title', read_only=True)
+    class Meta:
+        model = SubCategoryTwoFile
+        fields = ['id', 'student', 'sub_title', 'file']
 
 
 class SubCategoryTwoFileStudentFileCreateModelSerializers(serializers.ModelSerializer):

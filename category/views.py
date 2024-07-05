@@ -7,12 +7,13 @@ from .serializers import TotalDocListModelSerializers, TotalDocUserTeacherMarkMo
     CategoryOneStudentFileCreateModelSerializers, CategoryOneTeacherMarkCreateModelSerializers, CombinedTitleSerializer, \
     CategoryTwoListModelSerializers, CategoryTwoUserListModelSerializers, SubCategoryTwoListModelSerializers, \
     SubCategoryTwoStudentListModelSerializers, SubCategoryTwoFileStudentFileCreateModelSerializers, \
-    SubCategoryTwoFileStudentFileListModelSerializers, SubCategoryTwoFileTeacherIsApprovedUpdateModelSerializers
+    SubCategoryTwoFileStudentFileListModelSerializers, SubCategoryTwoFileTeacherIsApprovedUpdateModelSerializers, \
+    CategoryOneUserFilterListModelSerializers, SubCategoryTwoFileStudentFilterListModelSerializers
 
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.pagination import LimitOffsetPagination
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from .models import TotalDoc, CategoryOne, SubCategoryTwoFile, CategoryTwo, SubCategoryTwo, TotalDocUser, \
     CategoryOneUser, CategoryTwoUser, SubCategoryTwoUser
 from users.permissions import IsStudent, IsTeacher, IsSuperAdmin
@@ -67,16 +68,24 @@ class CategoryOneUserRetrieveListModelMixinView(mixins.RetrieveModelMixin,
     serializer_class = CategoryOneUserListModelSerializers
 
 
-class CategoryOneStudentFileCreateModelMixinView(mixins.CreateModelMixin,
-                                                 GenericViewSet):
+@api_view(['GET'])
+@permission_classes([IsStudent])
+def get_category_one_by_student_and_title(request, student_id, title_id):
+    files = CategoryOneUser.objects.filter(student_id=student_id, title_id=title_id)
+    serializer = CategoryOneUserFilterListModelSerializers(files, many=True)
+    return Response(serializer.data)
+
+
+class CategoryOneStudentFileCreateDeleteModelMixinView(mixins.CreateModelMixin, mixins.DestroyModelMixin,
+                                                       GenericViewSet):
     queryset = CategoryOneUser.objects.all()
     serializer_class = CategoryOneStudentFileCreateModelSerializers
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
 
-    http_method_names = ['post']
+    http_method_names = ['post', 'delete']
 
     def get_permissions(self):
-        if self.request.method in ['POST']:
+        if self.request.method in ['POST', 'DELETE']:
             return [IsStudent()]
         else:
             return super().get_permissions()
@@ -140,25 +149,31 @@ class SubCategoryTwoFileStudentRetrieveListModelMixinView(mixins.RetrieveModelMi
     serializer_class = SubCategoryTwoFileStudentFileListModelSerializers
 
 
+@api_view(['GET'])
+@permission_classes([IsStudent])
+def get_subcategory_two_file_by_student_and_title(request, student_id, sub_title_id):
+    files = SubCategoryTwoFile.objects.filter(student_id=student_id, sub_title_id=sub_title_id)
+    serializer = SubCategoryTwoFileStudentFilterListModelSerializers(files, many=True)
+    return Response(serializer.data)
 
-class SubCategoryTwoFileStudentCreateModelMixinView(mixins.CreateModelMixin,
-                                                 GenericViewSet):
+
+class SubCategoryTwoFileStudentCreateDeleteModelMixinView(mixins.CreateModelMixin, mixins.DestroyModelMixin,
+                                                          GenericViewSet):
     queryset = SubCategoryTwoFile.objects.all()
     serializer_class = SubCategoryTwoFileStudentFileCreateModelSerializers
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
 
-    http_method_names = ['post']
+    http_method_names = ['post', 'delete']
 
     def get_permissions(self):
-        if self.request.method in ['POST']:
+        if self.request.method in ['POST', 'DELETE']:
             return [IsStudent()]
         else:
             return super().get_permissions()
 
 
-
 class SubCategoryTwoFileTeacherIsApprovedUpdateModelMixinView(mixins.UpdateModelMixin,
-                                                    GenericViewSet):
+                                                              GenericViewSet):
     queryset = SubCategoryTwoFile.objects.all()
     serializer_class = SubCategoryTwoFileTeacherIsApprovedUpdateModelSerializers
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
@@ -170,6 +185,7 @@ class SubCategoryTwoFileTeacherIsApprovedUpdateModelMixinView(mixins.UpdateModel
             return [IsTeacher()]
         else:
             return super().get_permissions()
+
 
 # class CategoryOneTeacherModelViewSet(mixins.UpdateModelMixin,
 #                                      GenericViewSet):

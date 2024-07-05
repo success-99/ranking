@@ -4,12 +4,11 @@ from rest_framework_simplejwt.views import TokenBlacklistView, TokenRefreshView,
 
 from .views import TotalDocRetrieveListModelMixinView, TotalDocUserRetrieveListModelMixinView,\
     TotalDocTeacherMarkUpdateModelMixinView, CategoryOneRetrieveListModelMixinView, \
-    CategoryOneUserRetrieveListModelMixinView, CategoryOneStudentFileCreateModelMixinView,\
+    CategoryOneUserRetrieveListModelMixinView, CategoryOneStudentFileCreateDeleteModelMixinView,\
     CategoryOneTeacherUpdateMarkModelMixinView, CombinedTitleListAPIView, CategoryTwoRetrieveListModelMixinView,\
     CategoryTwoUserRetrieveListModelMixinView, SubCategoryTwoRetrieveListModelMixinView,\
     SubCategoryTwoStudentRetrieveListModelMixinView, SubCategoryTwoFileStudentRetrieveListModelMixinView,\
-    SubCategoryTwoFileStudentCreateModelMixinView, SubCategoryTwoFileTeacherIsApprovedUpdateModelMixinView
-
+    SubCategoryTwoFileStudentCreateDeleteModelMixinView, SubCategoryTwoFileTeacherIsApprovedUpdateModelMixinView, get_category_one_by_student_and_title, get_subcategory_two_file_by_student_and_title
 
 router = DefaultRouter()
 
@@ -19,8 +18,9 @@ router.register('total-doc-student-list', TotalDocUserRetrieveListModelMixinView
 router.register('total-doc-student-mark-create-teacher', TotalDocTeacherMarkUpdateModelMixinView, basename='total_doc_student_mark_update')
 
 router.register('category-one-list', CategoryOneRetrieveListModelMixinView, basename='category_one_list')
+
 router.register('category-one-student-list', CategoryOneUserRetrieveListModelMixinView, basename='category_one_student_file_list')
-router.register('category-one-student-file-create', CategoryOneStudentFileCreateModelMixinView, basename='category_one_student_file_create')
+router.register('category-one-student-file-create-delete', CategoryOneStudentFileCreateDeleteModelMixinView, basename='category_one_student_file_create')
 router.register('category-one-student-mark-update-teacher', CategoryOneTeacherUpdateMarkModelMixinView, basename='category_one_student_mark_create')
 
 router.register('category-two-list', CategoryTwoRetrieveListModelMixinView, basename='category_two_list')
@@ -31,7 +31,7 @@ router.register('subcategory-two-list', SubCategoryTwoRetrieveListModelMixinView
 router.register('subcategory-two-student-list', SubCategoryTwoStudentRetrieveListModelMixinView, basename='subcategory_two_student_list')
 
 router.register('subcategory-two-file-student-list', SubCategoryTwoFileStudentRetrieveListModelMixinView, basename='subcategory_two_file_student_list')
-router.register('subcategory-two-file-create-student', SubCategoryTwoFileStudentCreateModelMixinView, basename='subcategory_two_file_update_student')
+router.register('subcategory-two-file-create-delete-student', SubCategoryTwoFileStudentCreateDeleteModelMixinView, basename='subcategory_two_file_update_student')
 
 router.register('subcategory-two-file-is_approved-update-teacher', SubCategoryTwoFileTeacherIsApprovedUpdateModelMixinView, basename='subcategory_two_file_is_approved_update_teacher')
 
@@ -49,6 +49,8 @@ urlpatterns = [
 
     path('', include(router.urls)),
     path('all-category-title/', CombinedTitleListAPIView.as_view(), name='all_category_title'),
+    path('category-one-filter/<int:student_id>/<int:title_id>/', get_category_one_by_student_and_title, name='category_one_filter'),
+    path('subcategory-two-file-filter/<int:student_id>/<int:sub_title_id>/', get_subcategory_two_file_by_student_and_title, name='subcategory_two_file_filter'),
 
     #     path('user-list/', UsersListApiView.as_view(), name='list'),
     #     path('user-detail/<int:pk>/', UserDetailApiView.as_view(), name='user-detail'),
