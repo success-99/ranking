@@ -40,9 +40,9 @@ class CategoryOne(BaseModel):
 
 
 class CategoryOneUser(BaseModel):
-    student = models.OneToOneField(StudentUser, related_name="category_one_student_users", on_delete=models.CASCADE,
+    student = models.ForeignKey(StudentUser, related_name="category_one_student_users", on_delete=models.CASCADE,
                                 null=True, blank=True)
-    title = models.ForeignKey(
+    title = models.OneToOneField(
         CategoryOne,
         on_delete=models.CASCADE,
         related_name="category_one_title_users",
