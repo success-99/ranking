@@ -27,6 +27,7 @@ class TotalDocUser(BaseModel):
     )
     mark = models.PositiveIntegerField(_("total doc mark"), default=0, validators=[MinValueValidator(0),
                                                                                    MaxValueValidator(5)])
+    short_description = models.TextField(_("short description"), blank=True, null=True)
 
     def __str__(self):
         return f"{self.title}: {self.student}"
@@ -51,6 +52,7 @@ class CategoryOneUser(BaseModel):
     file = models.FileField(_("category_one file"), null=True, blank=True)
     mark = models.PositiveIntegerField(_("category_one mark"), default=0, validators=[MinValueValidator(0),
                                                                                       MaxValueValidator(20)])
+    short_description = models.TextField(_("short description"), blank=True, null=True)
 
     def __str__(self):
         return f"{self.title}: {self.student}"
@@ -114,6 +116,7 @@ class SubCategoryTwoUser(BaseModel):
 
     mark = models.PositiveIntegerField(_("student mark"), default=0, validators=[MinValueValidator(0),
                                                                                  MaxValueValidator(8)])
+    short_description = models.TextField(_("short description"), blank=True, null=True)
 
     def __str__(self):
         return f"{self.sub_title}: {self.student}"
@@ -152,7 +155,6 @@ class SubCategoryTwoUser(BaseModel):
         category_two_user = CategoryTwoUser.objects.get(student=self.student, title=self.sub_title.title)
         category_two_user.mark = subcategory_total_mark
         category_two_user.save()
-
 
 
 class SubCategoryTwoFile(BaseModel):

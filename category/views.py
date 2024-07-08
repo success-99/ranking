@@ -2,13 +2,14 @@ from django.db import transaction
 from rest_framework import status, parsers, mixins, generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from .serializers import TotalDocListModelSerializers, TotalDocUserTeacherMarkModelSerializers, \
+from .serializers import TotalDocListModelSerializers, TotalDocUserTeacherMarkShortDescriptionCreateModelSerializers, \
     TotalDocUserListModelSerializers, CategoryOneListModelSerializers, CategoryOneUserListModelSerializers, \
-    CategoryOneStudentFileCreateModelSerializers, CategoryOneTeacherMarkCreateModelSerializers, CombinedTitleSerializer, \
+    CategoryOneStudentFileCreateModelSerializers, CategoryOneTeacherMarkShortDescriptionCreateModelSerializers, CombinedTitleSerializer, \
     CategoryTwoListModelSerializers, CategoryTwoUserListModelSerializers, SubCategoryTwoListModelSerializers, \
     SubCategoryTwoStudentListModelSerializers, SubCategoryTwoFileStudentFileCreateModelSerializers, \
     SubCategoryTwoFileStudentFileListModelSerializers, SubCategoryTwoFileTeacherIsApprovedUpdateModelSerializers, \
-    CategoryOneUserFilterListModelSerializers, SubCategoryTwoFileStudentFilterListModelSerializers
+    CategoryOneUserFilterListModelSerializers, SubCategoryTwoFileStudentFilterListModelSerializers, \
+    SubCategoryTwoTeacherUpdateShortDescriptionModelSerializers
 
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.pagination import LimitOffsetPagination
@@ -40,7 +41,7 @@ class TotalDocUserRetrieveListModelMixinView(mixins.RetrieveModelMixin,
 class TotalDocTeacherMarkUpdateModelMixinView(mixins.CreateModelMixin,
                                               GenericViewSet):
     queryset = TotalDocUser.objects.all()
-    serializer_class = TotalDocUserTeacherMarkModelSerializers
+    serializer_class = TotalDocUserTeacherMarkShortDescriptionCreateModelSerializers
     http_method_names = ['post']
 
     def get_permissions(self):
@@ -94,7 +95,7 @@ class CategoryOneStudentFileCreateDeleteModelMixinView(mixins.CreateModelMixin, 
 class CategoryOneTeacherUpdateMarkModelMixinView(mixins.UpdateModelMixin,
                                                  GenericViewSet):
     queryset = CategoryOneUser.objects.all()
-    serializer_class = CategoryOneTeacherMarkCreateModelSerializers
+    serializer_class = CategoryOneTeacherMarkShortDescriptionCreateModelSerializers
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
 
     http_method_names = ['patch']
@@ -138,6 +139,21 @@ class SubCategoryTwoStudentRetrieveListModelMixinView(mixins.RetrieveModelMixin,
     permission_classes = (AllowAny,)
     queryset = SubCategoryTwoUser.objects.all()
     serializer_class = SubCategoryTwoStudentListModelSerializers
+
+
+class SubCategoryTwoTeacherUpdateShortDescriptionModelMixinView(mixins.UpdateModelMixin,
+                                                              GenericViewSet):
+    queryset = SubCategoryTwoUser.objects.all()
+    serializer_class = SubCategoryTwoTeacherUpdateShortDescriptionModelSerializers
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
+
+    http_method_names = ['patch']
+
+    def get_permissions(self):
+        if self.request.method in ['PATCH']:
+            return [IsTeacher()]
+        else:
+            return super().get_permissions()
 
 
 # SubCategoryTwoFile model view
