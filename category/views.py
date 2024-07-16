@@ -2,6 +2,8 @@ from django.db import transaction
 from rest_framework import status, parsers, mixins, generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .serializers import TotalDocListModelSerializers, TotalDocUserTeacherMarkShortDescriptionCreateModelSerializers, \
     TotalDocUserListModelSerializers, CategoryOneListModelSerializers, CategoryOneUserListModelSerializers, \
     CategoryOneStudentFileCreateModelSerializers, CategoryOneTeacherMarkShortDescriptionCreateModelSerializers, CombinedTitleSerializer, \
@@ -9,7 +11,7 @@ from .serializers import TotalDocListModelSerializers, TotalDocUserTeacherMarkSh
     SubCategoryTwoStudentListModelSerializers, SubCategoryTwoFileStudentFileCreateModelSerializers, \
     SubCategoryTwoFileStudentFileListModelSerializers, SubCategoryTwoFileTeacherIsApprovedUpdateModelSerializers, \
     CategoryOneUserFilterListModelSerializers, SubCategoryTwoFileStudentFilterListModelSerializers, \
-    SubCategoryTwoTeacherUpdateShortDescriptionModelSerializers
+    SubCategoryTwoTeacherUpdateShortDescriptionModelSerializers, CategoryOneUserSerializer
 
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.pagination import LimitOffsetPagination
@@ -18,6 +20,7 @@ from rest_framework.decorators import action, api_view, permission_classes
 from .models import TotalDoc, CategoryOne, SubCategoryTwoFile, CategoryTwo, SubCategoryTwo, TotalDocUser, \
     CategoryOneUser, CategoryTwoUser, SubCategoryTwoUser
 from users.permissions import IsStudent, IsTeacher, IsSuperAdmin
+from django.shortcuts import render
 
 
 # TotalDoc model views
@@ -51,6 +54,9 @@ class TotalDocTeacherMarkUpdateModelMixinView(mixins.CreateModelMixin,
             return super().get_permissions()
 
 
+
+
+
 # CategoryOne model views
 class CategoryOneRetrieveListModelMixinView(mixins.RetrieveModelMixin,
                                             mixins.ListModelMixin,
@@ -75,6 +81,14 @@ def get_category_one_by_student_and_title(request, student_id, title_id):
     files = CategoryOneUser.objects.filter(student_id=student_id, title_id=title_id)
     serializer = CategoryOneUserFilterListModelSerializers(files, many=True)
     return Response(serializer.data)
+
+
+class CategoryOneUserAPIView(APIView):
+    def get(self, request, id):
+        users = CategoryOneUser.objects.filter(title_id=id).select_related('student')
+        serialized_users = CategoryOneUserSerializer(users, many=True)  # Agar serialize qilish kerak bo'lsa
+        return Response(serialized_users.data)
+
 
 
 class CategoryOneStudentFileCreateDeleteModelMixinView(mixins.CreateModelMixin, mixins.DestroyModelMixin,
@@ -438,3 +452,12 @@ class CombinedTitleListAPIView(generics.ListAPIView):
 #     def partial_update(self, request, *args, **kwargs):
 #         kwargs['partial'] = True
 #         return self.update(request, *args, **kwargs)
+
+
+
+# def handling_404(request, exception):
+#     return render(request, '404.html', {})
+#
+#
+# def handling_500(request):
+#     return render(request, '500.html')

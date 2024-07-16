@@ -43,7 +43,7 @@ class CategoryOne(BaseModel):
 class CategoryOneUser(BaseModel):
     student = models.ForeignKey(StudentUser, related_name="category_one_student_users", on_delete=models.CASCADE,
                                 null=True, blank=True)
-    title = models.OneToOneField(
+    title = models.ForeignKey(
         CategoryOne,
         on_delete=models.CASCADE,
         related_name="category_one_title_users",
@@ -53,6 +53,9 @@ class CategoryOneUser(BaseModel):
     mark = models.PositiveIntegerField(_("category_one mark"), default=0, validators=[MinValueValidator(0),
                                                                                       MaxValueValidator(20)])
     short_description = models.TextField(_("short description"), blank=True, null=True)
+
+    class Meta:
+        unique_together = ['student', 'title']
 
     def __str__(self):
         return f"{self.title}: {self.student}"

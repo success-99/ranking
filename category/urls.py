@@ -10,7 +10,7 @@ from .views import TotalDocRetrieveListModelMixinView, TotalDocUserRetrieveListM
     SubCategoryTwoStudentRetrieveListModelMixinView, SubCategoryTwoFileStudentRetrieveListModelMixinView,\
     SubCategoryTwoFileStudentCreateDeleteModelMixinView, SubCategoryTwoFileTeacherIsApprovedUpdateModelMixinView,\
     get_category_one_by_student_and_title, get_subcategory_two_file_by_student_and_title, \
-    SubCategoryTwoTeacherUpdateShortDescriptionModelMixinView
+    SubCategoryTwoTeacherUpdateShortDescriptionModelMixinView, CategoryOneUserAPIView
 
 router = DefaultRouter()
 
@@ -55,6 +55,7 @@ urlpatterns = [
     path('all-category-title/', CombinedTitleListAPIView.as_view(), name='all_category_title'),
     path('category-one-filter/<int:student_id>/<int:title_id>/', get_category_one_by_student_and_title, name='category_one_filter'),
     path('subcategory-two-file-filter/<int:student_id>/<int:sub_title_id>/', get_subcategory_two_file_by_student_and_title, name='subcategory_two_file_filter'),
+    path('category-one-users-lists/<int:id>/', CategoryOneUserAPIView.as_view(), name='category-one-users'),
 
     #     path('user-list/', UsersListApiView.as_view(), name='list'),
     #     path('user-detail/<int:pk>/', UserDetailApiView.as_view(), name='user-detail'),

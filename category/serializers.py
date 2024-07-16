@@ -27,6 +27,8 @@ class TotalDocUserTeacherMarkShortDescriptionCreateModelSerializers(serializers.
         fields = ['id', 'student', 'title', 'mark', 'short_description']
 
 
+
+
 # CategoryOne model serializers
 class CategoryOneListModelSerializers(serializers.ModelSerializer):
     class Meta:
@@ -65,6 +67,16 @@ class CategoryOneTeacherMarkShortDescriptionCreateModelSerializers(serializers.M
     class Meta:
         model = CategoryOneUser
         fields = ['id', 'mark', 'short_description']
+
+
+
+class CategoryOneUserSerializer(serializers.ModelSerializer):
+    student_id = serializers.CharField(source='student.id', read_only=True)
+    student = serializers.CharField(source='student.user.get_full_name', read_only=True)
+
+    class Meta:
+        model = CategoryOneUser
+        fields = ['student_id', 'student', 'file']
 
 
 # CategoryTwo model serializers
